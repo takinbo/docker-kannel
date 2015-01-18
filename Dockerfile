@@ -2,16 +2,24 @@ FROM ubuntu:precise
 
 MAINTAINER Tim Akinbo <takinbo@timbaobjects.com>
 
-RUN apt-get update
-RUN apt-get install -y supervisor openssh-server wget libssl0.9.8 libxml2 psmisc
+RUN apt-get update && apt-get install -y \
+    bison \
+    build-essential \
+    libxml2-dev
+ADD http://kannel.org/download/1.4.4/gateway-1.4.4.tar.gz gateway-1.4.4.tar.gz
+RUN tar xzf gateway-1.4.4.tar.gz
+WORKDIR gateway-1.4.4
+RUN ./configure --prefix=/usr --sysconfdir=/etc/kannel
+RUN touch .depend
+RUN make
+RUN make install
+WORKDIR /
+RUN rm gateway-1.4.4.tar.gz
+RUN rm -Rf gateway-1.4.4
+RUN mkdir -p /var/log/kannel
+RUN mkdir -p /var/spool/kannel
 
-RUN mkdir -p /var/run/sshd
-ADD install_kannel.sh /
-RUN /bin/bash /install_kannel.sh
-RUN rm /install_kannel.sh
-ADD kannel.conf /etc/kannel/kannel.conf
-ADD server.conf /etc/supervisor/conf.d/
-ADD startup.sh /
-
-EXPOSE 22 13013
-ENTRYPOINT ["/bin/bash", "/startup.sh"]
+VOLUME /etc/kannel
+VOLUME /var/log/kannel
+VOLUME /var/spool/kannel
+WORKDIR /usr/sbin
