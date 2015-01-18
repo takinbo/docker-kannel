@@ -5,7 +5,8 @@ MAINTAINER Tim Akinbo <takinbo@timbaobjects.com>
 RUN apt-get update && apt-get install -y \
     bison \
     build-essential \
-    libxml2-dev
+    libxml2-dev \
+    libssl-dev
 ADD http://kannel.org/download/1.4.4/gateway-1.4.4.tar.gz gateway-1.4.4.tar.gz
 RUN tar xzf gateway-1.4.4.tar.gz
 WORKDIR gateway-1.4.4
