@@ -6,19 +6,22 @@ RUN apt-get update && apt-get install -y \
     bison \
     build-essential \
     libxml2-dev \
-    libssl-dev
-ADD http://kannel.org/download/1.4.4/gateway-1.4.4.tar.gz gateway-1.4.4.tar.gz
-RUN tar xzf gateway-1.4.4.tar.gz
-WORKDIR gateway-1.4.4
-RUN ./configure --prefix=/usr --sysconfdir=/etc/kannel
-RUN touch .depend
-RUN make
-RUN make install
-WORKDIR /
-RUN rm gateway-1.4.4.tar.gz
-RUN rm -Rf gateway-1.4.4
-RUN mkdir -p /var/log/kannel
-RUN mkdir -p /var/spool/kannel
+    libssl-dev \
+    wget \
+    && wget --no-check-certificate https://kannel.org/download/1.4.5/gateway-1.4.5.tar.gz \
+    && tar xzf gateway-1.4.5.tar.gz \
+    && cd gateway-1.4.5 \
+    && ./configure --prefix=/usr --sysconfdir=/etc/kannel \
+    && touch .depend \
+    && make \
+    && make install \
+    && cp test/fakesmsc /usr/sbin/ \
+    && cp test/fakewap /usr/sbin/ \
+    && cd / \
+    && rm gateway-1.4.5.tar.gz \
+    && rm -Rf gateway-1.4.5 \
+    && mkdir -p /var/log/kannel \
+    && mkdir -p /var/spool/kannel
 
 VOLUME /etc/kannel
 VOLUME /var/log/kannel
