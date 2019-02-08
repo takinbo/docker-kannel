@@ -7,6 +7,7 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     libxml2-dev \
     libssl-dev \
+    openssl \
     wget \
     && wget --no-check-certificate https://kannel.org/download/1.4.5/gateway-1.4.5.tar.gz \
     && tar xzf gateway-1.4.5.tar.gz \
